@@ -77,10 +77,10 @@ router.delete('/api/students/:id', async (req, res) => {
         if (!deletedStudent) {
             return res.status(404).send('no student found')
         }
-        res.status(200).send(`${deletedStudent} was successfully deleted!!!`)
+        res.status(200).send(`${deletedStudent} was deleted successfully!!!`)
     } catch (err) {
         res.status(400).send(err)
     }
 })
-
+  
 module.exports = router;

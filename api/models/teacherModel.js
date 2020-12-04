@@ -41,10 +41,10 @@ const teacherSchema = new Schema({
         type: String,
         required: true
     },
-    students: [String],
+    //students: [String],
     // classId,
     // joinedAt
 })
-const Student = mongoose.model('Student', studentSchema);
+const Teacher = mongoose.model('Teacher', teacherSchema);
 
-module.exports = Student;
+module.exports = Teacher;

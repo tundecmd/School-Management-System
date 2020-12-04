@@ -13,9 +13,16 @@ const mongoose = require('mongoose')
 const config = require('./config/index');
 const studentRouter = require('./routes/studentRoutes');
 const teacherRouter = require('./routes/teacherRoutes');
+const principalRouter = require('./routes/principalRoutes');
+const managerRouter = require('./routes/managerRoutes');
 
 //connection to localhost
-mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1:27017/school-management-system-api', {
+          useNewUrlParser: true, 
+          useCreateIndex: true, 
+          useUnifiedTopology: true, 
+          useFindAndModify: false 
+        })
 
 //let uri = 'mongodb+srv://ademustexcel:judiciary@cluster0.g5s4z.mongodb.net/fcc?retryWrites=true&w=majority';
 //mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true })
@@ -24,6 +31,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {useNewUrlParser:
 app.use(express.static('public'))
 app.use(studentRouter)
 app.use(teacherRouter)
+app.use(principalRouter)
+app.use(managerRouter)
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {

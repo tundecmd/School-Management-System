@@ -11,18 +11,19 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const mongoose = require('mongoose')
 const config = require('./config/index');
-const router = require('./routes/studentRoutes');
+const studentRouter = require('./routes/studentRoutes');
+const teacherRouter = require('./routes/teacherRoutes');
 
 //connection to localhost
-mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {     useNewUrlParser: true,     useCreateIndex: true })
+mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
 
 //let uri = 'mongodb+srv://ademustexcel:judiciary@cluster0.g5s4z.mongodb.net/fcc?retryWrites=true&w=majority';
 //mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true })
 
 //app.use(cors())
 app.use(express.static('public'))
-app.use(router)
-
+app.use(studentRouter)
+app.use(teacherRouter)
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {

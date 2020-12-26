@@ -47,17 +47,20 @@ router.post('/api/principals', async (req, res) => {
 // UPDATE A PRINCIPAL
 router.patch('/api/principals/:id', async (req, res) => {
     const _id = req.params.id;
-    const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email"];
+    const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email", "password"];
     const updates = Object.keys(req.body);
     const isValid = updates.every(update => allowedUpdates.includes(update))
     if (isValid === false) {
         return res.status(400).send( "Invalid updates")
     }
     try {
-        const updatedPrincipal = await Principal.findByIdAndUpdate(_id, req.body, {
-            new: true,
-            runValidators: true
-        })
+        // const updatedPrincipal = await Principal.findByIdAndUpdate(_id, req.body, {
+        //     new: true,
+        //     runValidators: true
+        // })
+        const principalToBeUpdated = await Principal.findById(_id)
+        updates.forEach((update) => principalToBeUpdated[update] = req.body[update])
+        const updatedPrincipal = await principalToBeUpdated.save()
         if (updatedPrincipal === false) {
             res.status(404).send('no update')
         }

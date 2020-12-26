@@ -51,17 +51,20 @@ router.post('/api/manager', async (req, res) => {
 // UPDATE A MANAGER
 router.patch('/api/manager/:id', async (req, res) => {
     const _id = req.params.id;
-    const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email"];
+    const allowedUpdates = ['firstname', "password", 'lastname', 'gender', "username", "email", "password"];
     const updates = Object.keys(req.body);
     const isValid = updates.every(update => allowedUpdates.includes(update))
     if (isValid === false) {
         return res.status(400).send( "Invalid updates")
     }
     try {
-        const updatedManager = await Manager.findByIdAndUpdate(_id, req.body, {
-            new: true,
-            runValidators: true
-        })
+        // const updatedManager = await Manager.findByIdAndUpdate(_id, req.body, {
+        //     new: true,
+        //     runValidators: true
+        // })
+        const managerToBeUpdated = await Manager.findById(_id)
+        updates.forEach((update) => managerToBeUpdated[update] = req.body[update])
+        const updatedManager = await managerToBeUpdated.save()
         if (updatedManager === false) {
             return res.status(404).send('no update')
         }

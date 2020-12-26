@@ -1,6 +1,7 @@
-const express = require('express')
-const app = express()
+const express = require('express');
 const Student = require('../models/studentModel');
+const app = express()
+//const Student = require('../models/studentModel');
 //const express = require('express');
 const router = new express.Router();
 
@@ -48,25 +49,29 @@ router.post('/api/students', async (req, res) => {
 // UPDATE A STUDENT
 router.patch('/api/students/:id', async (req, res) => {
     const _id = req.params.id;
-    const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email"];
+    const allowedUpdates = ['firstname', 'password', 'lastname', 'gender', "username", "email"];
     const updates = Object.keys(req.body);
     const isValid = updates.every(update => allowedUpdates.includes(update))
     if (isValid === false) {
         return res.status(400).send( "Invalid updates")
     }
     try {
-        const updatedStudent = await Student.findByIdAndUpdate(_id, req.body, {
-            new: true,
-            runValidators: true
-        })
+        // const updatedStudent = await Student.findByIdAndUpdate(_id, req.body, {
+        //     new: true,
+        //     runValidators: true
+        // })
+        // find by id
+        // then update each
+        const studentToBeUpdated = await Student.findById(_id)
+        updates.forEach((update) => studentToBeUpdated[update] = req.body[update])
+        const updatedStudent = await studentToBeUpdated.save()
         if (!updatedStudent) {
-            res.status(404).send('no update')
+            res.status(404).send('no update available')
         }
         res.status(200).send(updatedStudent)
     } catch (err) {
         res.status(400).send(err)
     }
-
 })
 
 // DELETE STUDENT

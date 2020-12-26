@@ -47,17 +47,20 @@ router.post('/api/teachers', async (req, res) => {
 // UPDATE A TEACHER
 router.patch('/api/teachers/:id', async (req, res) => {
     const _id = req.params.id;
-    const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email"];
+    const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email", "password"];
     const updates = Object.keys(req.body);
     const isValid = updates.every(update => allowedUpdates.includes(update))
     if (isValid === false) {
         return res.status(400).send( "Invalid updates")
     }
     try {
-        const updatedTeacher = await Teacher.findByIdAndUpdate(_id, req.body, {
-            new: true,
-            runValidators: true
-        })
+        // const updatedTeacher = await Teacher.findByIdAndUpdate(_id, req.body, {
+        //     new: true,
+        //     runValidators: true
+        // })
+        const teacherToBeUpdated = await Teacher.findById(_id)
+        updates.forEach((update) => teacherToBeUpdated[update] = req.body[update])
+        const updatedTeacher = await teacherToBeUpdated.save()
         if (!updatedTeacher) {
             res.status(404).send('no update')
         }

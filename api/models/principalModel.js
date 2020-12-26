@@ -25,6 +25,11 @@ const principalSchema = new Schema({
             }
         }
     },
+    password: {
+        type: String,
+        required: true,
+        trim: true
+    },
     username: {
         type: String,
         required: true

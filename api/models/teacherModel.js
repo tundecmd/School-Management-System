@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 const teacherSchema = new Schema({
@@ -49,6 +50,13 @@ const teacherSchema = new Schema({
     //students: [String],
     // classId,
     // joinedAt
+})
+teacherSchema.pre('save', async function (next) {
+    const teacher = this;
+    if (teacher.isModified('password')) {
+        teacher.password = await bcrypt.hash(teacher.password, 8)
+    }
+    next()
 })
 const Teacher = mongoose.model('Teacher', teacherSchema);
 

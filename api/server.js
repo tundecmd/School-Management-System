@@ -29,11 +29,25 @@ mongoose.connect('mongodb://127.0.0.1:27017/school-management-system-api', {
 
 //app.use(cors())
 app.use(express.static('public'))
+
+
+// Goal: Setup middleware for maintenance mode
+//
+// 1. Register a new middleware function
+// 2. Send back a maintenance message with a 503 status code
+// 3. Try your requests from the server and confirm status/message shows
+
+// app.use((req, res, next) => {
+//   res.status(503)
+//       .send(`Mad Scientists at work. This site is currently under maintenance! 
+//            We are sorry the incoveniences. Check back soon`)  
+//   next()
+// })
+
 app.use(studentRouter)
 app.use(teacherRouter)
 app.use(principalRouter)
 app.use(managerRouter)
-
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)

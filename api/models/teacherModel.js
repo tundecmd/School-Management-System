@@ -1,0 +1,63 @@
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
+
+const Schema = mongoose.Schema;
+const teacherSchema = new Schema({
+    firstname: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    lastname: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true,
+        lowercase: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error('Email is invalid')
+            }
+        }
+    },
+    password: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    username: {
+        type: String,
+        required: true
+    },
+    gender: {
+        type: String,
+        required: true
+    }, 
+    age: {
+        type: Number,
+        required: true,
+    },
+    salary: {
+        type: String,
+        required: true
+    },
+    //students: [String],
+    // classId,
+    // joinedAt
+})
+teacherSchema.pre('save', async function (next) {
+    const teacher = this;
+    if (teacher.isModified('password')) {
+        teacher.password = await bcrypt.hash(teacher.password, 8)
+    }
+    next()
+})
+const Teacher = mongoose.model('Teacher', teacherSchema);
+
+module.exports = Teacher;

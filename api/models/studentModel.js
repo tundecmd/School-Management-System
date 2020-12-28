@@ -54,16 +54,6 @@ const studentSchema = new Schema({
     // joinedAt
 })
 
-// studentSchema.methods.getPublicProfile = function () {
-//     const student = this;
-//     const studentObject = student.toObject();
-
-//     delete studentObject.password
-//     delete studentObject.tokens 
-    
-//     return studentObject;
-// }
-
 studentSchema.methods.toJSON = function () {
     const student = this;
     const studentObject = student.toObject();
@@ -106,3 +96,14 @@ studentSchema.pre('save', async function (next) {
 const Student = mongoose.model('Student', studentSchema);
 
 module.exports = Student;
+
+
+// studentSchema.methods.getPublicProfile = function () {
+//     const student = this;
+//     const studentObject = student.toObject();
+
+//     delete studentObject.password
+//     delete studentObject.tokens 
+    
+//     return studentObject;
+// }

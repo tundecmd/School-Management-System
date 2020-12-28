@@ -4,6 +4,30 @@ const Teacher = require('../models/teacherModel');
 //const express = require('express');
 const router = new express.Router();
 
+// PUBLIC
+// CREATE A TEACHER
+router.post('/api/teachers', async (req, res) => {
+    const newTeacher = new Teacher(req.body)
+    try {
+        await newTeacher.save()
+        res.status(201).send(newTeacher)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+// PUBLIC
+// TEACHER LOGIN
+router.post('/api/teachers/login', async (req, res) => {
+    try {
+        const teacher = await Teacher.findByCredentials(req.body.email, req.body.password);
+        const token = await teacher.generateAuthToken()
+        res.send({teacher, token})
+    } catch (error) {
+        res.status(400).send('problem logging in')
+    }
+})
+
 // READ TEACHERS
 router.get('/api/teachers', async (req, res) => {
     try {
@@ -30,17 +54,6 @@ router.get('/api/teacher/:id', async (req, res) => {
         res.status(200).send(teacher)    
     } catch (err) {
         res.status(500).send(err)
-    }
-})
-
-// CREATE A TEACHER
-router.post('/api/teachers', async (req, res) => {
-    const newTeacher = new Teacher(req.body)
-    try {
-        await newTeacher.save()
-        res.status(201).send(newTeacher)
-    } catch (err) {
-        res.status(400).send(err)
     }
 })
 

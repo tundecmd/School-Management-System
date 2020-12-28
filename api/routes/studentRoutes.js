@@ -13,21 +13,7 @@ router.get('/api/students/me', auth, async (req, res) => {
     res.send(req.student)
 })
 
-// READ A STUDENT
-// router.get('/api/students/:id', auth, async (req, res) => {
-//     //console.log(req.params)
-//     const _id = req.params.id;
-//     try {
-//         const student = await Student.findById(_id);
-//         //console.log('student', student)
-//         if (!student) {
-//             return res.status(404).send();
-//         }
-//         res.send(student)    
-//     } catch (err) {
-//         res.status(500).send(err)
-//     }
-// })
+
 
 // PUBLIC
 // CREATE A STUDENT
@@ -109,3 +95,20 @@ router.delete('/api/students/me', auth, async (req, res) => {
 })
   
 module.exports = router;
+
+
+// READ A STUDENT
+// router.get('/api/students/:id', auth, async (req, res) => {
+//     //console.log(req.params)
+//     const _id = req.params.id;
+//     try {
+//         const student = await Student.findById(_id);
+//         //console.log('student', student)
+//         if (!student) {
+//             return res.status(404).send();
+//         }
+//         res.send(student)    
+//     } catch (err) {
+//         res.status(500).send(err)
+//     }
+// })

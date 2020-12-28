@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
 const Teacher = require('../models/teacherModel');
-//const express = require('express');
 const router = new express.Router();
+const authTeacher = require('../middlewares/authTeacher');
 
 // PUBLIC
 // CREATE A TEACHER
@@ -28,8 +28,24 @@ router.post('/api/teachers/login', async (req, res) => {
     }
 })
 
+
+// PRIVATE
+// Teacher Logout
+router.post('/api/teachers/logout', authTeacher, async (req, res) => {
+    try {
+        req.teacher.tokens = req.teacher.tokens.filter((token) => {
+            return token.token !== req.token;
+        })
+        await req.teacher.save()
+        res.status(200).send('session logged out successfully')
+    } catch (error) {
+        res.status(400).send('problem logging out')
+    }
+})
+
+// PUBLIC
 // READ TEACHERS
-router.get('/api/teachers', async (req, res) => {
+router.get('/api/teachers', authTeacher,  async (req, res) => {
     try {
         const teachers = await Teacher.find({});
         if (!teachers || teachers.length === 0) {
@@ -42,7 +58,7 @@ router.get('/api/teachers', async (req, res) => {
 })
 
 // READ A TEACHER
-router.get('/api/teacher/:id', async (req, res) => {
+router.get('/api/teacher/:id', authTeacher, async (req, res) => {
     //console.log(req.params)
     const _id = req.params.id;
     try {
@@ -58,8 +74,7 @@ router.get('/api/teacher/:id', async (req, res) => {
 })
 
 // UPDATE A TEACHER
-router.patch('/api/teachers/:id', async (req, res) => {
-    const _id = req.params.id;
+router.patch('/api/teachers/me', authTeacher, async (req, res) => {
     const allowedUpdates = ['firstname', 'lastname', 'gender', "username", "email", "password"];
     const updates = Object.keys(req.body);
     const isValid = updates.every(update => allowedUpdates.includes(update))
@@ -67,16 +82,8 @@ router.patch('/api/teachers/:id', async (req, res) => {
         return res.status(400).send( "Invalid updates")
     }
     try {
-        // const updatedTeacher = await Teacher.findByIdAndUpdate(_id, req.body, {
-        //     new: true,
-        //     runValidators: true
-        // })
-        const teacherToBeUpdated = await Teacher.findById(_id)
-        updates.forEach((update) => teacherToBeUpdated[update] = req.body[update])
-        const updatedTeacher = await teacherToBeUpdated.save()
-        if (!updatedTeacher) {
-            res.status(404).send('no update')
-        }
+        updates.forEach((update) => req.teacher[update] = req.body[update])
+        const updatedTeacher = await req.teacher.save()
         res.status(200).send(updatedTeacher)
     } catch (err) {
         res.status(400).send(err)
@@ -84,13 +91,9 @@ router.patch('/api/teachers/:id', async (req, res) => {
 })
 
 // DELETE TEACHER
-router.delete('/api/teacher/:id', async (req, res) => {
-    const _id = req.params.id;
+router.delete('/api/teacher/me', authTeacher, async (req, res) => {
     try {
-        const deletedTeacher = await Teacher.findByIdAndDelete(_id);
-        if (!deletedTeacher) {
-            return res.status(404).send('teacher not found')
-        }
+        const deletedTeacher = await Teacher.findByIdAndDelete(req.teacher._id);
         res.status(200).send(`${deletedTeacher} was deleted successfully!!!`)
     } catch (err) {
         res.status(400).send(err)

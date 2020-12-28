@@ -59,6 +59,16 @@ const teacherSchema = new Schema({
     // joinedAt
 })
 
+teacherSchema.methods.toJSON = function () {
+    const teacher = this;
+    const teacherObject = teacher.toObject()
+
+    delete teacherObject.password
+    delete teacherObject.tokens
+
+    return teacherObject
+}
+
 teacherSchema.methods.generateAuthToken = async function () {
     const teacher = this;
     const token = jwt.sign({ _id: teacher._id.toString() }, 'thisismynewcourse');

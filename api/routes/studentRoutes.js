@@ -4,7 +4,7 @@ const app = express()
 //const Student = require('../models/studentModel');
 //const express = require('express');
 const router = new express.Router();
-const auth = require('../middlewares/auth');
+const auth = require('../middlewares/authStudent');
 
 // READ STUDENTS
 router.get('/api/students/me', auth, async (req, res) => {

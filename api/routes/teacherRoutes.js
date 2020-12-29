@@ -23,8 +23,8 @@ router.post('/api/teachers/login', async (req, res) => {
         const teacher = await Teacher.findByCredentials(req.body.email, req.body.password);
         const token = await teacher.generateAuthToken()
         res.send({teacher, token})
-    } catch (error) {
-        res.status(400).send('problem logging in')
+    } catch (e) {
+        res.status(400).send('Unable to log in')
     }
 })
 
@@ -37,9 +37,21 @@ router.post('/api/teachers/logout', authTeacher, async (req, res) => {
             return token.token !== req.token;
         })
         await req.teacher.save()
-        res.status(200).send('session logged out successfully')
+        res.status(200).send('Current session logged out successfully')
     } catch (error) {
-        res.status(400).send('problem logging out')
+        res.status(400).send('Unable to log out')
+    }
+})
+
+// PRIVATE
+// Teacher LogOutAll
+router.post('/api/teachers/logoutall', authTeacher, async (req, res) => {
+    try {
+        req.teacher.tokens = [];
+        await req.teacher.save()
+        res.status(200).send('All sessions logged out successfully')
+    } catch (e) {
+        res.status(400).send('Unable to log out')
     }
 })
 

@@ -66,7 +66,7 @@ teacherSchema.methods.toJSON = function () {
     delete teacherObject.password
     delete teacherObject.tokens
 
-    return teacherObject
+    return teacherObject;
 }
 
 teacherSchema.methods.generateAuthToken = async function () {
@@ -80,11 +80,11 @@ teacherSchema.methods.generateAuthToken = async function () {
 }
 
 teacherSchema.statics.findByCredentials = async (email, password) => {
-    const teacher = await Teacher.findOne({ email })
+    const teacher = await Teacher.findOne({ email });
     if (!teacher) {
         throw new Error('Unable to login')
     }
-    const isMatch = await bcrypt.compare(password, teacher.password);
+    const isMatch = bcrypt.compare(password, teacher.password);
     if (!isMatch) {
         throw new Error('Unable to login')
     } 

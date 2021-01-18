@@ -5,12 +5,17 @@ const jwt = require('jsonwebtoken');
 
 const Schema = mongoose.Schema;
 const studentSchema = new Schema({
-    firstname: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    lastname: {
+    // firstname: {
+    //     type: String,
+    //     required: true,
+    //     trim: true
+    // },
+    // lastname: {
+    //     type: String,
+    //     required: true,
+    //     trim: true
+    // },
+    name: {
         type: String,
         required: true,
         trim: true
